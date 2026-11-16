@@ -1,0 +1,105 @@
+/* ==============================================================
+   RISERS Sandwich Hub - Responsive Styles
+   ============================================================== */
+
+/* Tablet & Mobile Breakpoints */
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.75rem;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-summary-box {
+    position: static;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  /* Admin Sidebar on Tablet */
+  .admin-sidebar {
+    position: fixed;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+  }
+
+  .admin-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+  }
+
+  .nav-links {
+    display: none; /* Mobile navigation via clean toggle or bottom bar */
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-method-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group .form-input,
+  .filter-group .form-select,
+  .filter-group .btn {
+    width: 100%;
+  }
+
+  .token-giant {
+    font-size: 3.25rem;
+  }
+}

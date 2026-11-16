@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Management – RISERS Sandwich Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <span style="font-size: 1.5rem;">🥪</span>
+          <span>RISERS HUB</span>
+        </a>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li class="nav-section-title">Operations</li>
+        <li class="sidebar-nav-item" data-nav-id="dashboard">
+          <a href="dashboard.html"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="orders">
+          <a href="orders.html"><span class="nav-icon">📋</span><span>Orders</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="kitchen">
+          <a href="kitchen.html"><span class="nav-icon">🍳</span><span>Kitchen KDS</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="payments">
+          <a href="payments.html"><span class="nav-icon">💵</span><span>Payments</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="transactions">
+          <a href="transactions.html"><span class="nav-icon">📑</span><span>Transactions [DL]</span></a>
+        </li>
+
+        <li class="nav-section-title">Store Management</li>
+        <li class="sidebar-nav-item" data-nav-id="products">
+          <a href="products.html"><span class="nav-icon">🥪</span><span>Menu Products</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="inventory">
+          <a href="inventory.html"><span class="nav-icon">📦</span><span>Inventory Stock</span></a>
+        </li>
+        <li class="sidebar-nav-item active" data-nav-id="expenses">
+          <a href="expenses.html"><span class="nav-icon">📉</span><span>Expenses</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="cash-register">
+          <a href="cash-register.html"><span class="nav-icon">🗄️</span><span>Cash Register</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="reports">
+          <a href="reports.html"><span class="nav-icon">📈</span><span>Business Reports</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="feedback">
+          <a href="feedback.html"><span class="nav-icon">⭐</span><span>Customer Reviews</span></a>
+        </li>
+
+        <li class="nav-section-title">Administration</li>
+        <li class="sidebar-nav-item" data-nav-id="staff">
+          <a href="staff.html"><span class="nav-icon">👥</span><span>Staff Team</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="settings">
+          <a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings & Stall QR</span></a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-info">
+          <div class="admin-avatar">SO</div>
+          <div class="admin-details">
+            <div class="admin-name">Store Owner</div>
+            <div class="admin-role">OWNER</div>
+          </div>
+        </div>
+        <button class="logout-btn btn btn-outline btn-sm" title="Log Out" style="color: #EF4444; border-color: #7F1D1D; padding: 0.35rem 0.6rem;">
+          🚪
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="stall-status-badge open">
+          <span class="status-dot-pulse"></span>
+          <span>Cost & Expense Control</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="open-add-expense-btn" class="btn btn-primary btn-sm">+ Record Stall Expense</button>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Stall Operating Expenses</h1>
+            <p class="page-subtitle">Track ingredient procurement, packaging, transportation, stall rent, electricity, and maintenance.</p>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="exp-export-csv" class="btn btn-secondary btn-sm">CSV</button>
+            <button id="exp-export-xlsx" class="btn btn-secondary btn-sm">Excel (.xlsx)</button>
+            <button id="exp-export-pdf" class="btn btn-secondary btn-sm">PDF</button>
+          </div>
+        </div>
+
+        <!-- Summary Totals -->
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="card" style="padding: 1.25rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Total Expenses</div>
+            <div id="expenses-total-amount" style="font-size: 1.75rem; font-weight: 800; color: var(--color-danger);">₹0.00</div>
+          </div>
+          <div class="card" style="padding: 1.25rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Paid From Physical Cash Drawer</div>
+            <div id="expenses-cash-amount" style="font-size: 1.75rem; font-weight: 800; color: #B45309;">₹0.00</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Expense Item</th>
+                <th>Category</th>
+                <th>Amount (₹)</th>
+                <th>Paid Via</th>
+                <th>Physical Drawer</th>
+                <th>Date</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="expenses-table-tbody">
+              <!-- Rendered by js/admin/expenses.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Expense Modal -->
+  <div id="expense-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Record Stall Expense</h3>
+        <button id="expense-modal-close" class="modal-close">✕</button>
+      </div>
+
+      <form id="expense-form">
+        <div class="form-group">
+          <label class="form-label" for="exp-title">Expense Title / Vendor *</label>
+          <input type="text" id="exp-title" class="form-input" placeholder="e.g. Bread purchase from bakery" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="exp-category">Category</label>
+            <select id="exp-category" class="form-select">
+              <option value="ingredients">Ingredient Purchases</option>
+              <option value="packaging">Packaging Materials</option>
+              <option value="transportation">Transportation & Delivery</option>
+              <option value="rent">Stall Pitch Rent</option>
+              <option value="electricity">Electricity / Gas Fuel</option>
+              <option value="equipment">Grill Equipment & Spatulas</option>
+              <option value="marketing">Flyers & Promotion</option>
+              <option value="other">Other Miscellaneous</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-amount">Amount (₹) *</label>
+            <input type="number" id="exp-amount" class="form-input font-mono" step="0.5" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="exp-method">Payment Method</label>
+            <select id="exp-method" class="form-select">
+              <option value="cash">Cash</option>
+              <option value="upi">UPI</option>
+              <option value="bank_transfer">Bank Transfer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-date">Expense Date</label>
+            <input type="date" id="exp-date" class="form-input" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="exp-paid-in-cash" checked />
+            <span style="font-weight: 600; font-size: 0.9rem;">Deduct directly from physical cash register balance</span>
+          </label>
+          <div class="form-help">Essential for accurate daily drawer count reconciliation.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="exp-notes">Notes / Bill Reference</label>
+          <input type="text" id="exp-notes" class="form-input" placeholder="Invoice # or receipt details" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.5rem;">
+          Record Expense
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/expenses.js"></script>
+</body>
+</html>

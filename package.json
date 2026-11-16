@@ -1,0 +1,22 @@
+{
+  "name": "risers-sandwich-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RISERS Sandwich Hub - Customer Ordering Website and Business Management System",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "qrcode": "^1.5.4",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

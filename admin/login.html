@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Login – RISERS Sandwich Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body class="gate-screen">
+
+  <div class="gate-card">
+    <div class="brand-logo" style="justify-content: center; margin-bottom: 1.25rem;">
+      <div class="brand-logo-icon">🥪</div>
+      <span>RISERS</span>
+    </div>
+
+    <span class="badge badge-role" style="margin-bottom: 0.5rem;">AUTHENTICATED ACCESS</span>
+    <h1 style="font-size: 1.65rem; margin-bottom: 0.5rem;">Staff Account Login</h1>
+    <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.75rem;">
+      Sign in with your authorized email and password to access the business management dashboard.
+    </p>
+
+    <div id="login-error" style="display: none; background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem; text-align: left;">
+    </div>
+
+    <form id="login-form">
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="staff-email">Staff Email Address</label>
+        <input 
+          type="email" 
+          id="staff-email" 
+          class="form-input" 
+          placeholder="owner@risers.com" 
+          value="owner@risers.com"
+          required 
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="staff-password">Password</label>
+        <input 
+          type="password" 
+          id="staff-password" 
+          class="form-input" 
+          placeholder="••••••••••••" 
+          value="password123"
+          required 
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button type="submit" id="login-submit-btn" class="btn btn-primary btn-block btn-lg">
+        <span>Sign In to Dashboard ➔</span>
+      </button>
+    </form>
+
+    <!-- Role Quick-select for local demo/testing -->
+    <div style="margin-top: 1.5rem; background-color: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: var(--radius-md); padding: 0.85rem; text-align: left; font-size: 0.8rem;">
+      <div style="font-weight: 700; color: #475569; margin-bottom: 0.4rem;">Demo Roles Available:</div>
+      <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+        <button type="button" class="btn btn-secondary btn-sm demo-role-btn" data-email="owner@risers.com">Owner</button>
+        <button type="button" class="btn btn-secondary btn-sm demo-role-btn" data-email="manager@risers.com">Manager</button>
+        <button type="button" class="btn btn-secondary btn-sm demo-role-btn" data-email="cashier@risers.com">Cashier</button>
+        <button type="button" class="btn btn-secondary btn-sm demo-role-btn" data-email="kitchen@risers.com">Kitchen</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+      <a href="/admin/index.html" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+        ← Back to Access Code Gate
+      </a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { checkGateUnlocked, loginAdmin } from '/js/admin/auth.js';
+    import { showToast } from '/js/shared/notifications.js';
+
+    // Verify gate was unlocked
+    if (!checkGateUnlocked()) {
+      window.location.href = '/admin/index.html';
+    }
+
+    const form = document.getElementById('login-form');
+    const emailInput = document.getElementById('staff-email');
+    const passInput = document.getElementById('staff-password');
+    const errorEl = document.getElementById('login-error');
+    const submitBtn = document.getElementById('login-submit-btn');
+
+    // Demo role autofill
+    document.querySelectorAll('.demo-role-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        emailInput.value = btn.dataset.email;
+        passInput.value = 'password123';
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Verifying credentials...</span>';
+
+      try {
+        const adminProfile = await loginAdmin(emailInput.value, passInput.value);
+        showToast(`Welcome back, ${adminProfile.full_name}!`, 'success');
+
+        setTimeout(() => {
+          if (adminProfile.role === 'kitchen') {
+            window.location.href = '/admin/kitchen.html';
+          } else {
+            window.location.href = '/admin/dashboard.html';
+          }
+        }, 500);
+
+      } catch (err) {
+        errorEl.textContent = err.message || 'Login failed. Please check credentials.';
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Sign In to Dashboard ➔</span>';
+      }
+    });
+  </script>
+</body>
+</html>

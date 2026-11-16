@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen Display System (KDS) – RISERS Sandwich Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body style="background-color: #1F2937;">
+  <div class="admin-layout">
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="kitchen.html" class="sidebar-brand">
+          <span style="font-size: 1.5rem;">🥪</span>
+          <span>RISERS HUB</span>
+        </a>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li class="nav-section-title">Kitchen</li>
+        <li class="sidebar-nav-item active" data-nav-id="kitchen">
+          <a href="kitchen.html"><span class="nav-icon">🍳</span><span>Kitchen KDS</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="orders">
+          <a href="orders.html"><span class="nav-icon">📋</span><span>All Orders</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="dashboard">
+          <a href="dashboard.html"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-info">
+          <div class="admin-avatar">KS</div>
+          <div class="admin-details">
+            <div class="admin-name">Grill Cook</div>
+            <div class="admin-role">KITCHEN</div>
+          </div>
+        </div>
+        <button class="logout-btn btn btn-outline btn-sm" title="Log Out" style="color: #EF4444; border-color: #7F1D1D; padding: 0.35rem 0.6rem;">
+          🚪
+        </button>
+      </div>
+    </aside>
+
+    <!-- Kitchen Main Screen -->
+    <div class="admin-main" style="background-color: #111827;">
+      <header class="admin-topbar" style="background-color: #1F2937; border-color: #374151; color: #FFFFFF;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <h2 style="font-size: 1.25rem; color: #FFFFFF;">🔥 Active Kitchen Grills (KDS)</h2>
+          <span class="badge badge-preparing" id="kitchen-queue-count">Loading...</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="test-chime-btn" class="btn btn-secondary btn-sm" style="background-color: #374151; color: #FFFFFF; border: none;">
+            🔔 Test Chime
+          </button>
+          <button onclick="window.location.reload()" class="btn btn-primary btn-sm">↻ Refresh KDS</button>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div id="kitchen-board" class="kitchen-board">
+          <!-- Rendered by js/admin/kitchen.js -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/kitchen.js"></script>
+</body>
+</html>

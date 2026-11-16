@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Team Management – RISERS Sandwich Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <span style="font-size: 1.5rem;">🥪</span>
+          <span>RISERS HUB</span>
+        </a>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li class="nav-section-title">Operations</li>
+        <li class="sidebar-nav-item" data-nav-id="dashboard">
+          <a href="dashboard.html"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="orders">
+          <a href="orders.html"><span class="nav-icon">📋</span><span>Orders</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="kitchen">
+          <a href="kitchen.html"><span class="nav-icon">🍳</span><span>Kitchen KDS</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="payments">
+          <a href="payments.html"><span class="nav-icon">💵</span><span>Payments</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="transactions">
+          <a href="transactions.html"><span class="nav-icon">📑</span><span>Transactions [DL]</span></a>
+        </li>
+
+        <li class="nav-section-title">Store Management</li>
+        <li class="sidebar-nav-item" data-nav-id="products">
+          <a href="products.html"><span class="nav-icon">🥪</span><span>Menu Products</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="inventory">
+          <a href="inventory.html"><span class="nav-icon">📦</span><span>Inventory Stock</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="expenses">
+          <a href="expenses.html"><span class="nav-icon">📉</span><span>Expenses</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="cash-register">
+          <a href="cash-register.html"><span class="nav-icon">🗄️</span><span>Cash Register</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="reports">
+          <a href="reports.html"><span class="nav-icon">📈</span><span>Business Reports</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="feedback">
+          <a href="feedback.html"><span class="nav-icon">⭐</span><span>Customer Reviews</span></a>
+        </li>
+
+        <li class="nav-section-title">Administration</li>
+        <li class="sidebar-nav-item active" data-nav-id="staff">
+          <a href="staff.html"><span class="nav-icon">👥</span><span>Staff Team</span></a>
+        </li>
+        <li class="sidebar-nav-item" data-nav-id="settings">
+          <a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings & Stall QR</span></a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-info">
+          <div class="admin-avatar">SO</div>
+          <div class="admin-details">
+            <div class="admin-name">Store Owner</div>
+            <div class="admin-role">OWNER</div>
+          </div>
+        </div>
+        <button class="logout-btn btn btn-outline btn-sm" title="Log Out" style="color: #EF4444; border-color: #7F1D1D; padding: 0.35rem 0.6rem;">
+          🚪
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="stall-status-badge open">
+          <span class="status-dot-pulse"></span>
+          <span>Access Control & Staff Team</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="open-add-staff-btn" class="btn btn-primary btn-sm">+ Add Staff Account</button>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Authorized Staff Accounts</h1>
+            <p class="page-subtitle">Manage role-based access control (Owner, Manager, Cashier, Kitchen Staff).</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem; background-color: #F8FAFC;">
+          <h4 style="margin-bottom: 0.5rem;">Role Permissions Overview:</h4>
+          <ul style="font-size: 0.85rem; color: #475569; padding-left: 1.25rem; line-height: 1.8;">
+            <li><strong>Owner:</strong> Full business access, financials, reports, staff management, and system settings.</li>
+            <li><strong>Manager:</strong> Orders, products, inventory, expenses, reports, and payment audit.</li>
+            <li><strong>Cashier:</strong> Order lookup, cash & UPI payment verification, and daily cash drawer reconciliation.</li>
+            <li><strong>Kitchen Staff:</strong> Kitchen Display System (KDS) and preparation status advancement only.</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Full Name</th>
+                <th>Email Address</th>
+                <th>Assigned Role</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="staff-table-tbody">
+              <!-- Rendered by js/admin/staff.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Staff Modal -->
+  <div id="staff-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create Staff Account</h3>
+        <button id="staff-modal-close" class="modal-close">✕</button>
+      </div>
+
+      <form id="staff-form">
+        <div class="form-group">
+          <label class="form-label" for="staff-name-input">Full Name *</label>
+          <input type="text" id="staff-name-input" class="form-input" placeholder="e.g. Ramesh Kumar" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staff-email-input">Email Address *</label>
+          <input type="email" id="staff-email-input" class="form-input" placeholder="e.g. ramesh@risershub.in" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staff-password-input">Temporary Password *</label>
+          <input type="password" id="staff-password-input" class="form-input font-mono" placeholder="••••••••••••" required minlength="6" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staff-role-select">Role Assignment</label>
+          <select id="staff-role-select" class="form-select">
+            <option value="cashier">Cashier (Order & Stall Payments)</option>
+            <option value="kitchen">Kitchen Staff (KDS Display Only)</option>
+            <option value="manager">Manager (Inventory, Expenses & Orders)</option>
+            <option value="owner">Co-Owner (Full Business Access)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.5rem;">
+          Create Staff User
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin/staff.js"></script>
+</body>
+</html>

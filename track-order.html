@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Order – RISERS Sandwich Hub</title>
+  <meta name="description" content="Track your freshly prepared sandwich order token in real time." />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/customer.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="customer-nav">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-logo-icon">🥪</div>
+        <span>RISERS</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="menu.html" class="nav-link">Menu</a></li>
+          <li><a href="track-order.html" class="nav-link active">Track Order</a></li>
+          <li><a href="about.html" class="nav-link">About Us</a></li>
+          <li><a href="contact.html" class="nav-link">Stall Location</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <a href="menu.html" class="btn btn-outline btn-sm">Order Another</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <div class="section-subtitle">Realtime Stall Queue</div>
+        <h1 class="section-title">Live Order Status</h1>
+        <p>Watch your sandwiches progress from the order ticket to the hot grill.</p>
+      </div>
+
+      <!-- Tracking Content Rendered Dynamically by tracking.js -->
+      <div id="tracking-content">
+        <!-- Rendered by js/customer/tracking.js -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="customer-footer">
+    <div class="container footer-bottom" style="border: none;">
+      <div>© 2026 RISERS Sandwich Hub. Rise Together, Serve Better!</div>
+      <div style="font-size: 0.85rem; color: #9CA3AF;">Stall #4, Food Street, Bangalore, India</div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/customer/tracking.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu – RISERS Sandwich Hub</title>
+  <meta name="description" content="Explore our hot grilled sandwich menu. Chicken Sandwich ₹99, Paneer Sandwich ₹79." />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/customer.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="customer-nav">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-logo-icon">🥪</div>
+        <span>RISERS</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="menu.html" class="nav-link active">Menu</a></li>
+          <li><a href="track-order.html" class="nav-link">Track Order</a></li>
+          <li><a href="about.html" class="nav-link">About Us</a></li>
+          <li><a href="contact.html" class="nav-link">Stall Location</a></li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <a href="checkout.html" class="nav-cart-btn" aria-label="Shopping Cart">
+          <span>🛒 Tray</span>
+          <span class="cart-count-badge" style="display: none;">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <div class="section-subtitle">Freshly Grilled to Order</div>
+        <h1 class="section-title">Our Sandwich Menu</h1>
+        <p>Pick your favorites, customize quantity, and order directly to our physical stall queue.</p>
+
+        <!-- Category Filters -->
+        <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm menu-filter-btn" data-filter="all">All Sandwiches</button>
+          <button class="btn btn-secondary btn-sm menu-filter-btn" data-filter="veg">🌱 100% Veg</button>
+          <button class="btn btn-secondary btn-sm menu-filter-btn" data-filter="nonveg">🍗 Non-Veg</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Grid Loaded by menu.js -->
+      <div id="menu-items-grid" class="menu-grid">
+        <!-- Rendered by js/customer/menu.js -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Cart Alert for Mobile -->
+  <aside style="position: sticky; bottom: 1rem; z-index: 90; max-width: 500px; margin: 0 auto; padding: 0 1rem;">
+    <div id="sticky-cart-bar" style="display: none; background-color: var(--color-primary-dark); color: #FFFFFF; border-radius: var(--radius-xl); padding: 0.85rem 1.5rem; box-shadow: var(--shadow-xl); align-items: center; justify-content: space-between;">
+      <div>
+        <span style="font-weight: 700; font-size: 1.05rem;" id="sticky-cart-count">0 items</span>
+        <span style="opacity: 0.8; font-size: 0.85rem; margin-left: 0.5rem;" id="sticky-cart-total">₹0.00</span>
+      </div>
+      <a href="checkout.html" class="btn btn-secondary btn-sm" style="background-color: #FFFFFF; color: var(--color-primary-dark); font-weight: 700;">
+        View Tray ➔
+      </a>
+    </div>
+  </aside>
+
+  <!-- Footer -->
+  <footer class="customer-footer">
+    <div class="container footer-bottom" style="border: none;">
+      <div>© 2026 RISERS Sandwich Hub. Rise Together, Serve Better!</div>
+      <div style="font-size: 0.85rem; color: #9CA3AF;">Stall #4, Food Street, Bangalore, India</div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/customer/menu.js"></script>
+  <script type="module">
+    import { Cart } from '/js/customer/cart.js';
+    import { formatCurrency } from '/js/shared/utils.js';
+
+    function updateStickyBar() {
+      const bar = document.getElementById('sticky-cart-bar');
+      const countEl = document.getElementById('sticky-cart-count');
+      const totalEl = document.getElementById('sticky-cart-total');
+      if (!bar) return;
+
+      const count = Cart.getTotalCount();
+      if (count > 0) {
+        bar.style.display = 'flex';
+        if (countEl) countEl.textContent = `${count} ${count === 1 ? 'sandwich' : 'sandwiches'}`;
+        if (totalEl) totalEl.textContent = formatCurrency(Cart.getSubtotal());
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('risers:cart_updated', updateStickyBar);
+    document.addEventListener('DOMContentLoaded', updateStickyBar);
+  </script>
+</body>
+</html>

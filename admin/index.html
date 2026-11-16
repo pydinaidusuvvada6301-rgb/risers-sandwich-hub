@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Access Gate – RISERS Sandwich Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body class="gate-screen">
+
+  <div class="gate-card">
+    <div class="gate-icon-circle">🔐</div>
+    
+    <span class="badge badge-pending" style="margin-bottom: 0.75rem;">SECURITY ACCESS GATE</span>
+    <h1 style="font-size: 1.65rem; margin-bottom: 0.5rem;">RISERS Staff Portal</h1>
+    <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.75rem;">
+      Enter your confidential business access code to unlock the staff authentication portal.
+    </p>
+
+    <div id="gate-error" style="display: none; background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem;">
+    </div>
+
+    <form id="gate-form">
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="access-code">Admin Access Code</label>
+        <input 
+          type="password" 
+          id="access-code" 
+          class="form-input font-mono" 
+          placeholder="••••••••••••" 
+          required 
+          autocomplete="off"
+          autofocus
+        />
+        <div class="form-help">Supplied separately by the business owner.</div>
+      </div>
+
+      <button type="submit" id="gate-submit-btn" class="btn btn-primary btn-block btn-lg">
+        <span>Verify Code & Continue ➔</span>
+      </button>
+    </form>
+
+    <div style="margin-top: 1.75rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+      <a href="/index.html" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+        ← Return to Customer Website
+      </a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase, isConfigured } from '/js/config/supabase.js';
+    import { setGateTicket } from '/js/admin/auth.js';
+    import { showToast } from '/js/shared/notifications.js';
+
+    const form = document.getElementById('gate-form');
+    const input = document.getElementById('access-code');
+    const errorEl = document.getElementById('gate-error');
+    const submitBtn = document.getElementById('gate-submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+      const code = input.value.trim();
+
+      if (!code) {
+        errorEl.textContent = 'Please enter your access code.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Verifying code...</span>';
+
+      try {
+        if (isConfigured && supabase) {
+          // Verify with Supabase Edge Function
+          const { data, error } = await supabase.functions.invoke('verify-admin-code', {
+            body: { code }
+          });
+
+          if (error || !data?.success) {
+            throw new Error(data?.error || error?.message || 'Invalid access code. Access denied.');
+          }
+
+          setGateTicket(data.gate_ticket || 'unlocked');
+        } else {
+          // Offline local preview test: accepts any code (or demo code)
+          setGateTicket('mock-gate-ticket-unlocked');
+        }
+
+        showToast('Access code verified! Opening staff login...', 'success');
+        setTimeout(() => {
+          window.location.href = '/admin/login.html';
+        }, 500);
+
+      } catch (err) {
+        errorEl.textContent = err.message || 'Verification failed. Please check with the owner.';
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Verify Code & Continue ➔</span>';
+      }
+    });
+  </script>
+</body>
+</html>

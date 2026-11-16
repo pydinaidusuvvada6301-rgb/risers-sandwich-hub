@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Feedback – RISERS Sandwich Hub</title>
+  <meta name="description" content="Share your dining experience with RISERS Sandwich Hub." />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/customer.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="customer-nav">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-logo-icon">🥪</div>
+        <span>RISERS</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="menu.html" class="nav-link">Menu</a></li>
+          <li><a href="track-order.html" class="nav-link">Track Order</a></li>
+          <li><a href="about.html" class="nav-link">About Us</a></li>
+          <li><a href="contact.html" class="nav-link">Stall Location</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <a href="menu.html" class="btn btn-secondary btn-sm">Menu</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container" style="max-width: 650px;">
+      <div id="feedback-card" class="card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <span class="badge badge-pending" style="margin-bottom: 0.5rem;">WE VALUE YOUR VOICE</span>
+          <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">How Was Your Meal?</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Help our stall team live up to our motto: <em>Rise Together, Serve Better!</em>
+          </p>
+        </div>
+
+        <form id="feedback-form">
+          <input type="hidden" id="feedback-order-id" />
+
+          <!-- Overall Rating -->
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <label class="form-label" style="font-size: 1rem; margin-bottom: 0.5rem;">Overall Experience</label>
+            <div id="stars-overall" class="star-rating">
+              <span class="star selected" data-value="1">★</span>
+              <span class="star selected" data-value="2">★</span>
+              <span class="star selected" data-value="3">★</span>
+              <span class="star selected" data-value="4">★</span>
+              <span class="star selected" data-value="5">★</span>
+            </div>
+          </div>
+
+          <!-- Food Rating -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 1px solid var(--border-subtle);">
+            <div>
+              <div style="font-weight: 700;">Sandwich Taste & Crunch</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Freshness of ingredients and filling</div>
+            </div>
+            <div id="stars-food" class="star-rating" style="font-size: 1.35rem;">
+              <span class="star selected" data-value="1">★</span>
+              <span class="star selected" data-value="2">★</span>
+              <span class="star selected" data-value="3">★</span>
+              <span class="star selected" data-value="4">★</span>
+              <span class="star selected" data-value="5">★</span>
+            </div>
+          </div>
+
+          <!-- Service Rating -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
+            <div>
+              <div style="font-weight: 700;">Counter Service & Speed</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Preparation time and stall courtesy</div>
+            </div>
+            <div id="stars-service" class="star-rating" style="font-size: 1.35rem;">
+              <span class="star selected" data-value="1">★</span>
+              <span class="star selected" data-value="2">★</span>
+              <span class="star selected" data-value="3">★</span>
+              <span class="star selected" data-value="4">★</span>
+              <span class="star selected" data-value="5">★</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="feedback-comments">Your Comments or Suggestions</label>
+            <textarea 
+              id="feedback-comments" 
+              class="form-textarea" 
+              rows="3" 
+              placeholder="What made your sandwich memorable? Any tips for our stall crew?"
+            ></textarea>
+          </div>
+
+          <button type="submit" id="submit-feedback-btn" class="btn btn-primary btn-lg btn-block">
+            Submit Review ➔
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="customer-footer">
+    <div class="container footer-bottom" style="border: none;">
+      <div>© 2026 RISERS Sandwich Hub. Rise Together, Serve Better!</div>
+      <div style="font-size: 0.85rem; color: #9CA3AF;">Stall #4, Food Street, Bangalore, India</div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/customer/feedback.js"></script>
+</body>
+</html>
