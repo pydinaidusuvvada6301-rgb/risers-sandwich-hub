@@ -398,82 +398,115 @@ ALTER TABLE public.business_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.order_status_history ENABLE ROW LEVEL SECURITY;
 
 -- 5.1 Products RLS
+DROP POLICY IF EXISTS "Public can view active products" ON public.products;
 CREATE POLICY "Public can view active products" ON public.products
     FOR SELECT USING (is_active = true);
 
+DROP POLICY IF EXISTS "Owner and Manager can manage products" ON public.products;
 CREATE POLICY "Owner and Manager can manage products" ON public.products
     FOR ALL USING (public.get_auth_role() IN ('owner', 'manager'));
 
 -- 5.2 Orders RLS
 -- Public can look up order using tracking_hash only
+DROP POLICY IF EXISTS "Customer can view own order by tracking hash" ON public.orders;
 CREATE POLICY "Customer can view own order by tracking hash" ON public.orders
     FOR SELECT USING (true); -- Filtered by query using tracking_hash; or staff can view all
 
+DROP POLICY IF EXISTS "Staff can view all orders" ON public.orders;
 CREATE POLICY "Staff can view all orders" ON public.orders
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'cashier', 'kitchen'));
 
+DROP POLICY IF EXISTS "Staff can update permitted orders" ON public.orders;
 CREATE POLICY "Staff can update permitted orders" ON public.orders
     FOR UPDATE USING (public.get_auth_role() IN ('owner', 'manager', 'cashier', 'kitchen'));
 
 -- 5.3 Order Items RLS
+DROP POLICY IF EXISTS "Public view order items for matching order" ON public.order_items;
 CREATE POLICY "Public view order items for matching order" ON public.order_items
     FOR SELECT USING (true);
 
 -- 5.4 Payments RLS
+DROP POLICY IF EXISTS "Staff can view payments" ON public.payments;
 CREATE POLICY "Staff can view payments" ON public.payments
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'cashier'));
 
+DROP POLICY IF EXISTS "Cashier, Manager, Owner can insert payments" ON public.payments;
 CREATE POLICY "Cashier, Manager, Owner can insert payments" ON public.payments
     FOR INSERT WITH CHECK (public.get_auth_role() IN ('owner', 'manager', 'cashier'));
 
 -- 5.5 Feedback RLS
+DROP POLICY IF EXISTS "Public can insert feedback for completed orders" ON public.feedback;
 CREATE POLICY "Public can insert feedback for completed orders" ON public.feedback
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Staff can view feedback" ON public.feedback;
 CREATE POLICY "Staff can view feedback" ON public.feedback
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'cashier'));
 
 -- 5.6 Inventory & Recipes RLS
+DROP POLICY IF EXISTS "Staff can view inventory" ON public.inventory;
 CREATE POLICY "Staff can view inventory" ON public.inventory
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'cashier', 'kitchen'));
 
+DROP POLICY IF EXISTS "Owner and Manager can modify inventory" ON public.inventory;
 CREATE POLICY "Owner and Manager can modify inventory" ON public.inventory
     FOR ALL USING (public.get_auth_role() IN ('owner', 'manager'));
 
+DROP POLICY IF EXISTS "Staff can view recipes" ON public.product_recipes;
 CREATE POLICY "Staff can view recipes" ON public.product_recipes
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'kitchen'));
 
+DROP POLICY IF EXISTS "Staff can view recipe ingredients" ON public.recipe_ingredients;
 CREATE POLICY "Staff can view recipe ingredients" ON public.recipe_ingredients
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'kitchen'));
 
 -- 5.7 Expenses RLS
+DROP POLICY IF EXISTS "Owner and Manager can manage expenses" ON public.expenses;
 CREATE POLICY "Owner and Manager can manage expenses" ON public.expenses
     FOR ALL USING (public.get_auth_role() IN ('owner', 'manager'));
 
 -- 5.8 Daily Cash Sessions RLS
+DROP POLICY IF EXISTS "Cashier, Manager, Owner can view cash sessions" ON public.daily_cash_sessions;
 CREATE POLICY "Cashier, Manager, Owner can view cash sessions" ON public.daily_cash_sessions
     FOR SELECT USING (public.get_auth_role() IN ('owner', 'manager', 'cashier'));
 
+DROP POLICY IF EXISTS "Cashier, Manager, Owner can update cash sessions" ON public.daily_cash_sessions;
 CREATE POLICY "Cashier, Manager, Owner can update cash sessions" ON public.daily_cash_sessions
     FOR ALL USING (public.get_auth_role() IN ('owner', 'manager', 'cashier'));
 
 -- 5.9 Business Settings RLS
+DROP POLICY IF EXISTS "Public can view business settings" ON public.business_settings;
 CREATE POLICY "Public can view business settings" ON public.business_settings
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Owner can update business settings" ON public.business_settings;
 CREATE POLICY "Owner can update business settings" ON public.business_settings
     FOR ALL USING (public.get_auth_role() = 'owner');
 
 -- 5.10 Admin Users RLS
+DROP POLICY IF EXISTS "Staff can view own admin profile" ON public.admin_users;
 CREATE POLICY "Staff can view own admin profile" ON public.admin_users
     FOR SELECT USING (id = auth.uid() OR public.get_auth_role() = 'owner');
 
+DROP POLICY IF EXISTS "Owner can manage staff" ON public.admin_users;
 CREATE POLICY "Owner can manage staff" ON public.admin_users
     FOR ALL USING (public.get_auth_role() = 'owner');
 
 -- ==============================================================
 -- 6. Supabase Realtime Publication
 -- ==============================================================
-ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.payments;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.inventory;
+DO $$
+BEGIN
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.payments;
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.inventory;
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+END $$;
