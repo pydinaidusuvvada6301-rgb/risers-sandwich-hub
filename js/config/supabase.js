@@ -232,7 +232,7 @@ const DEFAULT_MOCK_DATA = {
     business_name: 'RISERS Sandwich Hub',
     tagline: 'Rise Together, Serve Better!',
     contact_phone: '+91 98765 43210',
-    stall_address: 'Stall #4, Food Street, Bangalore, India',
+    stall_address: 'Chalapathi University, Mothadaka, Guntur, Andhra Pradesh – 522016, India',
     upi_id: 'risers@upi',
     opening_hours: '11:00 AM - 10:30 PM',
     is_store_open: true,
@@ -259,5 +259,28 @@ export function saveMockDB(data) {
     localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(data));
   } catch (err) {
     console.error('Failed to save to mock DB', err);
+  }
+}
+
+/**
+ * Resets scoped mock operational data for maintenance & debugging
+ */
+export function resetMockDB(resetType) {
+  try {
+    const db = getMockDB();
+    if (resetType === 'clear_test_orders') {
+      db.orders = db.orders.filter(o => !o.notes?.toLowerCase().includes('test') && !o.customer_name?.toLowerCase().includes('test'));
+    } else if (resetType === 'reset_daily_tokens') {
+      db.orders.forEach((o, idx) => { o.token_number = 101 + idx; });
+    } else if (resetType === 'clear_completed_queue') {
+      db.orders = db.orders.filter(o => o.order_status !== 'completed' && o.order_status !== 'cancelled');
+    } else if (resetType === 'reset_all_mock') {
+      localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(DEFAULT_MOCK_DATA));
+      return { success: true, message: 'Local offline database refreshed to clean defaults.' };
+    }
+    saveMockDB(db);
+    return { success: true, message: 'Operational maintenance reset applied.' };
+  } catch (err) {
+    return { success: false, error: err.message };
   }
 }

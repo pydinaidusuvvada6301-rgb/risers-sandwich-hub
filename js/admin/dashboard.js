@@ -2,9 +2,10 @@
 // RISERS Sandwich Hub - Admin Dashboard Controller
 // ==============================================================
 
-import { supabase, isConfigured, getMockDB } from '../config/supabase.js';
+import { supabase, isConfigured, getMockDB, resetMockDB } from '../config/supabase.js';
 import { requireAuth } from './auth.js';
 import { formatCurrency, formatDateTime, escapeHtml } from '../shared/utils.js';
+import { showToast } from '../shared/notifications.js';
 
 let currentAdmin = null;
 let dateFilter = 'today';
@@ -14,6 +15,7 @@ export async function initDashboard() {
   if (!currentAdmin) return;
 
   setupDateFilters();
+  setupManualResetModal();
   await loadDashboardData();
 }
 
@@ -210,6 +212,110 @@ function renderRecentPayments(payments) {
 function setElText(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text;
+}
+
+/**
+ * Handles the Operational Maintenance & Manual Reset functionality
+ * Protected for Owner and Manager roles with explicit confirmation
+ */
+function setupManualResetModal() {
+  const openBtn = document.getElementById('open-reset-modal-btn');
+  const modal = document.getElementById('reset-modal');
+  const closeBtn = document.getElementById('close-reset-modal-btn');
+  const cancelBtn = document.getElementById('cancel-reset-btn');
+  const form = document.getElementById('manual-reset-form');
+  const scopeSelect = document.getElementById('reset-scope-select');
+  const explanationEl = document.getElementById('reset-explanation');
+  const confirmInput = document.getElementById('reset-confirm-input');
+  const executeBtn = document.getElementById('execute-reset-btn');
+
+  // Hide if cashier role
+  if (currentAdmin && currentAdmin.role === 'cashier') {
+    if (openBtn) openBtn.style.display = 'none';
+    return;
+  }
+
+  const explanations = {
+    clear_test_orders: 'Deletes test orders where notes or customer name contains "test", preserving real customer orders and financial records.',
+    reset_daily_tokens: 'Resets today’s token sequence back to #101 without deleting existing orders or revenue metrics.',
+    clear_completed_queue: 'Cleans up archived cancelled orders from the active queue to keep dashboard views uncluttered.',
+    reset_all_mock: 'Restores offline demo cache to pristine initial seed state (Chicken ₹99 & Paneer ₹79).'
+  };
+
+  const openModal = () => {
+    if (modal) modal.style.display = 'flex';
+    if (confirmInput) confirmInput.value = '';
+    if (scopeSelect && explanationEl) {
+      explanationEl.textContent = explanations[scopeSelect.value] || '';
+    }
+  };
+
+  const closeModal = () => {
+    if (modal) modal.style.display = 'none';
+  };
+
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+  if (scopeSelect && explanationEl) {
+    scopeSelect.addEventListener('change', () => {
+      explanationEl.textContent = explanations[scopeSelect.value] || '';
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const confirmation = (confirmInput?.value || '').trim();
+      if (confirmation !== 'CONFIRM') {
+        showToast('Please type CONFIRM exactly to authorize this reset.', 'error');
+        return;
+      }
+
+      const resetType = scopeSelect?.value || 'clear_test_orders';
+      if (executeBtn) {
+        executeBtn.disabled = true;
+        executeBtn.textContent = 'Resetting...';
+      }
+
+      try {
+        if (isConfigured && supabase) {
+          const { data, error } = await supabase.functions.invoke('admin-operations', {
+            body: {
+              action: 'manual_reset',
+              payload: {
+                reset_type: resetType,
+                confirmation: 'CONFIRM'
+              }
+            }
+          });
+
+          if (error || (data && data.error)) {
+            throw new Error(data?.error || error?.message || 'Server reset failed');
+          }
+
+          showToast(data?.message || 'Maintenance reset completed successfully!', 'success');
+        } else {
+          // Offline / Local Mock Reset
+          const res = resetMockDB(resetType);
+          if (!res.success) throw new Error(res.error || 'Local reset failed');
+          showToast(res.message, 'success');
+        }
+
+        closeModal();
+        await loadDashboardData();
+      } catch (err) {
+        console.error('Manual reset error:', err);
+        showToast(`Reset Failed: ${err.message}`, 'error');
+      } finally {
+        if (executeBtn) {
+          executeBtn.disabled = false;
+          executeBtn.textContent = 'Execute Reset';
+        }
+      }
+    });
+  }
 }
 
 // Auto init on page load

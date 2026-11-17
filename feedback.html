@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Customer Feedback – RISERS Sandwich Hub</title>
-  <meta name="description" content="Share your dining experience with RISERS Sandwich Hub." />
+  <meta name="description" content="Share your dining experience with RISERS Sandwich Hub at Chalapathi University." />
   <link rel="stylesheet" href="/css/global.css" />
   <link rel="stylesheet" href="/css/components.css" />
   <link rel="stylesheet" href="/css/customer.css" />
@@ -20,7 +20,7 @@
         <span>RISERS</span>
       </a>
 
-      <nav>
+      <nav aria-label="Desktop Navigation">
         <ul class="nav-links">
           <li><a href="index.html" class="nav-link">Home</a></li>
           <li><a href="menu.html" class="nav-link">Menu</a></li>
@@ -30,11 +30,44 @@
         </ul>
       </nav>
 
-      <div>
+      <div class="nav-actions">
         <a href="menu.html" class="btn btn-secondary btn-sm">Menu</a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Open Mobile Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Drawer Navigation -->
+  <div id="mobile-nav-backdrop" class="mobile-nav-backdrop"></div>
+  <aside id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <div class="mobile-nav-header">
+      <a href="index.html" class="brand-logo" style="font-size: 1.2rem;">
+        <div class="brand-logo-icon" style="width: 30px; height: 30px; font-size: 1rem;">🥪</div>
+        <span>RISERS</span>
+      </a>
+      <button id="mobile-nav-close" class="mobile-nav-close" aria-label="Close Mobile Menu">✕</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html" class="mobile-nav-link"><span>🏠</span> Home</a></li>
+      <li><a href="menu.html" class="mobile-nav-link"><span>🥪</span> Fresh Menu</a></li>
+      <li><a href="checkout.html" class="mobile-nav-link"><span>🛒</span> Order Tray</a></li>
+      <li><a href="track-order.html" class="mobile-nav-link"><span>📍</span> Track Order</a></li>
+      <li><a href="about.html" class="mobile-nav-link"><span>✨</span> About RISERS</a></li>
+      <li><a href="contact.html" class="mobile-nav-link"><span>📌</span> Stall Location</a></li>
+      <li><a href="feedback.html" class="mobile-nav-link active"><span>⭐</span> Review Us</a></li>
+    </ul>
+    <div class="mobile-nav-footer">
+      <p style="margin-bottom: 0.5rem; font-weight: 700; color: var(--color-primary-dark);">RISERS Sandwich Hub</p>
+      <p style="font-size: 0.8rem; line-height: 1.4; margin-bottom: 0.75rem;">
+        Chalapathi University, Mothadaka, Guntur, AP – 522016
+      </p>
+      <a href="tel:+919876543210" class="btn btn-outline btn-sm btn-block" style="text-align: center;">📞 Call Stall Counter</a>
+    </div>
+  </aside>
 
   <main class="section">
     <div class="container" style="max-width: 650px;">
@@ -48,12 +81,21 @@
         </div>
 
         <form id="feedback-form">
-          <input type="hidden" id="feedback-order-id" />
+          <div class="form-group">
+            <label class="form-label" for="feedback-order-number">Order Number or Daily Token #</label>
+            <input 
+              type="text" 
+              id="feedback-order-number" 
+              class="form-input" 
+              placeholder="e.g. #101 or RSH-20261116-0101" 
+              required 
+            />
+          </div>
 
           <!-- Overall Rating -->
-          <div style="text-align: center; margin-bottom: 2rem;">
-            <label class="form-label" style="font-size: 1rem; margin-bottom: 0.5rem;">Overall Experience</label>
-            <div id="stars-overall" class="star-rating">
+          <div class="form-group">
+            <label class="form-label">Overall Experience (1 to 5 Stars)</label>
+            <div class="star-rating" id="rating-overall" data-rating="5">
               <span class="star selected" data-value="1">★</span>
               <span class="star selected" data-value="2">★</span>
               <span class="star selected" data-value="3">★</span>
@@ -62,13 +104,10 @@
             </div>
           </div>
 
-          <!-- Food Rating -->
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 1px solid var(--border-subtle);">
-            <div>
-              <div style="font-weight: 700;">Sandwich Taste & Crunch</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted);">Freshness of ingredients and filling</div>
-            </div>
-            <div id="stars-food" class="star-rating" style="font-size: 1.35rem;">
+          <!-- Food Quality Rating -->
+          <div class="form-group">
+            <label class="form-label">Food Freshness & Taste</label>
+            <div class="star-rating" id="rating-food" data-rating="5">
               <span class="star selected" data-value="1">★</span>
               <span class="star selected" data-value="2">★</span>
               <span class="star selected" data-value="3">★</span>
@@ -77,13 +116,10 @@
             </div>
           </div>
 
-          <!-- Service Rating -->
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-top: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
-            <div>
-              <div style="font-weight: 700;">Counter Service & Speed</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted);">Preparation time and stall courtesy</div>
-            </div>
-            <div id="stars-service" class="star-rating" style="font-size: 1.35rem;">
+          <!-- Service Speed Rating -->
+          <div class="form-group">
+            <label class="form-label">Service Speed & Stall Counter Hygiene</label>
+            <div class="star-rating" id="rating-service" data-rating="5">
               <span class="star selected" data-value="1">★</span>
               <span class="star selected" data-value="2">★</span>
               <span class="star selected" data-value="3">★</span>
@@ -114,10 +150,14 @@
   <footer class="customer-footer">
     <div class="container footer-bottom" style="border: none;">
       <div>© 2026 RISERS Sandwich Hub. Rise Together, Serve Better!</div>
-      <div style="font-size: 0.85rem; color: #9CA3AF;">Stall #4, Food Street, Bangalore, India</div>
+      <div style="font-size: 0.85rem; color: #9CA3AF;">
+        📍 Chalapathi University, Mothadaka, Guntur, AP – 522016 | 
+        <a href="https://maps.google.com/?q=Chalapathi+University,+Mothadaka,+Guntur,+Andhra+Pradesh+522016" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary-light);">Maps ↗</a>
+      </div>
     </div>
   </footer>
 
   <script type="module" src="/js/customer/feedback.js"></script>
+  <script type="module" src="/js/shared/mobile-nav.js"></script>
 </body>
 </html>

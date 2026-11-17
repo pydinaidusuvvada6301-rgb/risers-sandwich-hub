@@ -76,7 +76,7 @@ INSERT INTO public.business_settings (
     'Rise Together, Serve Better!',
     '+91 98765 43210',
     'contact@risershub.in',
-    'Stall #4, Food Street, Bangalore, India',
+    'Chalapathi University, Mothadaka, Guntur, Andhra Pradesh – 522016, India',
     'risers@upi',
     'https://risers-sandwich-hub.vercel.app',
     '11:00 AM - 10:30 PM',

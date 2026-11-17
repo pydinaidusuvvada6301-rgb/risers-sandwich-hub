@@ -124,6 +124,65 @@ serve(async (req) => {
         });
       }
 
+      case "manual_reset": {
+        if (!["owner", "manager"].includes(callerProfile.role)) {
+          return new Response(JSON.stringify({ error: "Only Owner or Manager can trigger manual maintenance reset" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        const { reset_type, confirmation } = payload || {};
+        if (confirmation !== "CONFIRM") {
+          return new Response(JSON.stringify({ error: "Invalid confirmation token. Type CONFIRM to proceed." }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        let summary = "";
+
+        if (reset_type === "clear_test_orders") {
+          const { error: delErr } = await supabase
+            .from("orders")
+            .delete()
+            .or("notes.ilike.%test%,customer_name.ilike.%test%");
+          if (delErr) throw delErr;
+          summary = "Test orders cleared successfully.";
+        } else if (reset_type === "reset_daily_tokens") {
+          const todayDate = new Date().toISOString().slice(0, 10);
+          await supabase
+            .from("token_sequences")
+            .upsert({ sequence_date: todayDate, last_token: 100 });
+          summary = "Daily token counter reset back to #101.";
+        } else if (reset_type === "clear_completed_queue") {
+          const { error: qErr } = await supabase
+            .from("orders")
+            .delete()
+            .in("order_status", ["cancelled"]);
+          if (qErr) throw qErr;
+          summary = "Active queue cleaned up successfully.";
+        } else {
+          return new Response(JSON.stringify({ error: "Invalid reset type specified" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        // Log audit event
+        await supabase.from("audit_logs").insert({
+          user_id: callerProfile.id,
+          action: `manual_reset:${reset_type}`,
+          resource_type: "system_maintenance",
+          details: { performed_by: callerProfile.full_name, role: callerProfile.role, summary }
+        });
+
+        return new Response(JSON.stringify({ success: true, message: summary }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+
       default:
         return new Response(JSON.stringify({ error: `Unknown action: ${action}` }), {
           status: 400,

@@ -81,26 +81,42 @@ export function exportToExcel(filename, sheetName, columns, rows, summaryTotals 
 }
 
 /**
+ * Helper to format Indian Rupee cleanly for PDF standard fonts without unicode encoding issues
+ */
+function formatPdfCurrency(amount) {
+  const num = Number(amount) || 0;
+  return 'Rs. ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/**
  * Generates and downloads a branded PDF transaction statement using jsPDF and autoTable
  */
 export function exportToPDF(filename, title, subtitle, columns, rows, summaryInfo = null) {
   const doc = new jsPDF('landscape', 'pt', 'a4');
+  const pageWidth = doc.internal.pageSize.getWidth();
 
   // Brand Header Background
   doc.setFillColor(217, 119, 6); // Warm Roasted Amber #D97706
-  doc.rect(0, 0, doc.internal.pageSize.getWidth(), 70, 'F');
+  doc.rect(0, 0, pageWidth, 72, 'F');
 
   // Title
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(20);
   doc.setTextColor(255, 255, 255);
-  doc.text('RISERS SANDWICH HUB', 40, 36);
+  doc.text('RISERS SANDWICH HUB', 40, 34);
 
   // Motto
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setTextColor(254, 243, 199);
-  doc.text('Rise Together, Serve Better! | Official Business Statement', 40, 52);
+  doc.text('Rise Together, Serve Better! | Official Business Statement', 40, 50);
+
+  // Official Address on Top Right
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(255, 255, 255);
+  doc.text('Chalapathi University, Mothadaka, Guntur, AP – 522016', pageWidth - 40, 34, { align: 'right' });
+  doc.text('Phone: +91 98765 43210 | contact@risershub.in', pageWidth - 40, 50, { align: 'right' });
 
   // Subtitle / Filters
   doc.setTextColor(31, 41, 55);
@@ -108,10 +124,10 @@ export function exportToPDF(filename, title, subtitle, columns, rows, summaryInf
   doc.setFont('helvetica', 'bold');
   doc.text(title, 40, 100);
 
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(107, 114, 128);
-  doc.text(`${subtitle} | Generated on: ${formatDateTime(new Date().toISOString())}`, 40, 116);
+  doc.text(`${subtitle} | Report Generated: ${formatDateTime(new Date().toISOString())} (IST)`, 40, 116);
 
   let currentY = 135;
 
@@ -119,32 +135,35 @@ export function exportToPDF(filename, title, subtitle, columns, rows, summaryInf
   if (summaryInfo) {
     doc.setFillColor(249, 250, 251);
     doc.setDrawColor(229, 231, 235);
-    doc.roundedRect(40, currentY, doc.internal.pageSize.getWidth() - 80, 50, 6, 6, 'FD');
+    doc.roundedRect(40, currentY, pageWidth - 80, 50, 6, 6, 'FD');
 
     doc.setFontSize(10);
     doc.setTextColor(55, 65, 81);
     doc.setFont('helvetica', 'bold');
 
-    const totalText = `Total Amount: ${formatCurrency(summaryInfo.totalAmount || 0)}`;
-    const cashText = `Cash Collections: ${formatCurrency(summaryInfo.cashTotal || 0)}`;
-    const upiText = `UPI Collections: ${formatCurrency(summaryInfo.upiTotal || 0)}`;
-    const countText = `Records: ${rows.length}`;
+    const totalText = `Total Collections: ${formatPdfCurrency(summaryInfo.totalAmount || 0)}`;
+    const cashText = `Cash: ${formatPdfCurrency(summaryInfo.cashTotal || 0)}`;
+    const upiText = `UPI: ${formatPdfCurrency(summaryInfo.upiTotal || 0)}`;
+    const countText = `Total Records: ${rows.length}`;
 
     doc.text(totalText, 55, currentY + 30);
-    doc.text(cashText, 250, currentY + 30);
-    doc.text(upiText, 450, currentY + 30);
-    doc.text(countText, 650, currentY + 30);
+    doc.text(cashText, 270, currentY + 30);
+    doc.text(upiText, 470, currentY + 30);
+    doc.text(countText, 670, currentY + 30);
 
     currentY += 65;
   }
 
-  // Format table data
+  // Format table data, ensuring Rs. is rendered cleanly without unicode glitches
   const head = [columns.map(c => c.header)];
   const body = rows.map(r => {
     return columns.map(col => {
       let val = r[col.key];
       if (col.format && typeof col.format === 'function') {
         val = col.format(val, r);
+      }
+      if (typeof val === 'string') {
+        val = val.replace(/₹/g, 'Rs. ');
       }
       return val !== undefined && val !== null ? String(val) : '';
     });
@@ -190,7 +209,7 @@ export function downloadReceiptPDF(transaction, order) {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
   doc.text('Rise Together, Serve Better!', 150, 48, { align: 'center' });
-  doc.text('Stall #4, Food Street | Bengaluru', 150, 60, { align: 'center' });
+  doc.text('Chalapathi University, Mothadaka | Guntur, AP – 522016', 150, 60, { align: 'center' });
 
   doc.setLineDash([2, 2]);
   doc.line(20, 72, 280, 72);
@@ -232,7 +251,7 @@ export function downloadReceiptPDF(transaction, order) {
   doc.setFontSize(13);
   doc.setTextColor(217, 119, 6);
   doc.text('AMOUNT RECEIVED:', 25, y);
-  doc.text(formatCurrency(transaction.amount || order?.total_amount || 0), 275, y, { align: 'right' });
+  doc.text(formatPdfCurrency(transaction.amount || order?.total_amount || 0), 275, y, { align: 'right' });
 
   y += 35;
   doc.setFont('helvetica', 'normal');

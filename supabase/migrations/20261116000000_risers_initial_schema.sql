@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS public.business_settings (
     logo_url TEXT,
     contact_phone TEXT NOT NULL DEFAULT '+91 98765 43210',
     contact_email TEXT NOT NULL DEFAULT 'contact@risershub.in',
-    stall_address TEXT NOT NULL DEFAULT 'Stall #4, Food Street, Bangalore, India',
+    stall_address TEXT NOT NULL DEFAULT 'Chalapathi University, Mothadaka, Guntur, Andhra Pradesh – 522016, India',
     upi_id TEXT NOT NULL DEFAULT 'risers@upi',
     upi_qr_url TEXT,
     production_url TEXT NOT NULL DEFAULT 'https://risers-sandwich-hub.vercel.app',

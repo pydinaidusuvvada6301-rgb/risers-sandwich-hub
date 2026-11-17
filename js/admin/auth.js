@@ -14,7 +14,11 @@ const MOCK_AUTH_USER_KEY = 'risers_mock_admin_user_v1';
 export function checkGateUnlocked() {
   const ticket = sessionStorage.getItem(GATE_TICKET_SESSION_KEY);
   if (!ticket) {
-    if (!window.location.pathname.endsWith('admin/') && !window.location.pathname.endsWith('admin/index.html')) {
+    const rawPath = (window.location.pathname || '').toLowerCase().replace(/\/+$/, '');
+    const isGatePage = rawPath === '/admin' || 
+                       rawPath === '/admin/index' || 
+                       rawPath.endsWith('/admin/index.html');
+    if (!isGatePage) {
       window.location.href = '/admin/index.html';
     }
     return false;
@@ -173,6 +177,31 @@ function populateAdminSidebar(admin) {
     .toUpperCase();
 
   avatarEls.forEach(el => el.textContent = initials || 'R');
+
+  // Mobile admin sidebar toggle & backdrop
+  const sidebar = document.getElementById('admin-sidebar');
+  const toggleBtn = document.getElementById('admin-sidebar-toggle');
+  let backdrop = document.getElementById('admin-sidebar-backdrop');
+  if (!backdrop && sidebar) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'admin-sidebar-backdrop';
+    backdrop.className = 'admin-sidebar-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      if (backdrop) backdrop.classList.toggle('visible');
+    });
+  }
+
+  if (backdrop && sidebar) {
+    backdrop.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      backdrop.classList.remove('visible');
+    });
+  }
 
   // Bind logout buttons
   document.querySelectorAll('.logout-btn').forEach(btn => {

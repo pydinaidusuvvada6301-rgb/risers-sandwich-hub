@@ -49,7 +49,7 @@ function populateForm(s) {
   setVal('set-name', s.business_name || 'RISERS Sandwich Hub');
   setVal('set-tagline', s.tagline || 'Rise Together, Serve Better!');
   setVal('set-phone', s.contact_phone || '+91 98765 43210');
-  setVal('set-address', s.stall_address || 'Stall #4, Food Street, Bangalore, India');
+  setVal('set-address', s.stall_address || 'Chalapathi University, Mothadaka, Guntur, Andhra Pradesh – 522016, India');
   setVal('set-upi-id', s.upi_id || 'risers@upi');
   setVal('set-hours', s.opening_hours || '11:00 AM - 10:30 PM');
   setVal('set-prod-url', s.production_url || window.location.origin);
