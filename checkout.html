@@ -96,17 +96,15 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="customer-phone">Indian Mobile Number *</label>
+                <label class="form-label" for="customer-phone">Indian Mobile Number <span style="font-weight: 400; color: var(--text-muted); font-size: 0.85rem;">(Optional)</span></label>
                 <input 
                   type="tel" 
                   id="customer-phone" 
                   class="form-input" 
-                  placeholder="10-digit mobile number (e.g. 9876543210)" 
-                  required 
+                  placeholder="10-digit mobile number (Optional)" 
                   maxlength="10" 
-                  pattern="[6-9][0-9]{9}"
                 />
-                <div class="form-help">Used for order tracking lookup and verification at stall.</div>
+                <div class="form-help">Optional: Used for SMS alerts or tracking lookup if provided.</div>
               </div>
 
               <div class="form-group">

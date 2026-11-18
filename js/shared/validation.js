@@ -4,10 +4,17 @@
 
 /**
  * Validates a 10-digit Indian mobile number
- * Must begin with 6, 7, 8, or 9
+ * Can be optional (default isRequired = false).
+ * If empty or not provided and isRequired is false, returns { valid: true, cleanPhone: '' }.
+ * If provided, must begin with 6, 7, 8, or 9 and be exactly 10 digits.
  */
-export function validateIndianMobile(phone) {
-  if (!phone) return { valid: false, message: 'Mobile number is required' };
+export function validateIndianMobile(phone, isRequired = false) {
+  if (!phone || String(phone).trim() === '') {
+    if (isRequired) {
+      return { valid: false, message: 'Mobile number is required' };
+    }
+    return { valid: true, cleanPhone: '' };
+  }
   const clean = String(phone).replace(/\D/g, '');
   if (clean.length !== 10) {
     return { valid: false, message: 'Please enter exactly 10 digits' };

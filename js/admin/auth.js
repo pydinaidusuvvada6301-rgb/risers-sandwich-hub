@@ -189,17 +189,55 @@ function populateAdminSidebar(admin) {
     document.body.appendChild(backdrop);
   }
 
+  const closeAdminSidebar = () => {
+    if (sidebar) sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('visible');
+    document.body.classList.remove('admin-sidebar-open');
+  };
+
+  const openAdminSidebar = () => {
+    if (sidebar) sidebar.classList.add('mobile-open');
+    if (backdrop) backdrop.classList.add('visible');
+    document.body.classList.add('admin-sidebar-open');
+  };
+
+  const toggleAdminSidebar = () => {
+    if (!sidebar) return;
+    if (sidebar.classList.contains('mobile-open')) {
+      closeAdminSidebar();
+    } else {
+      openAdminSidebar();
+    }
+  };
+
   if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('mobile-open');
-      if (backdrop) backdrop.classList.toggle('visible');
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAdminSidebar();
     });
   }
 
   if (backdrop && sidebar) {
     backdrop.addEventListener('click', () => {
-      sidebar.classList.remove('mobile-open');
-      backdrop.classList.remove('visible');
+      closeAdminSidebar();
+    });
+  }
+
+  // Close when pressing Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar && sidebar.classList.contains('mobile-open')) {
+      closeAdminSidebar();
+    }
+  });
+
+  // Close when clicking any navigation link inside sidebar on mobile
+  if (sidebar) {
+    sidebar.querySelectorAll('.sidebar-nav-item a, .sidebar-brand, .logout-btn').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 992) {
+          closeAdminSidebar();
+        }
+      });
     });
   }
 

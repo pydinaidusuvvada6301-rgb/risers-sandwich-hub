@@ -178,17 +178,24 @@ img, video, canvas, svg {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(17, 24, 39, 0.65);
-  backdrop-filter: blur(4px);
-  z-index: 140;
+  background-color: rgba(15, 23, 42, 0.45); /* Subtle transparent dark overlay */
+  backdrop-filter: none; /* Removed excessive blur */
+  -webkit-backdrop-filter: none;
+  z-index: 990; /* Sidebar appears strictly above overlay */
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 
 .admin-sidebar-backdrop.visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Prevent background scrolling when admin sidebar is open */
+body.admin-sidebar-open {
+  overflow: hidden !important;
+  touch-action: none;
 }
 
 .admin-sidebar-toggle {
@@ -282,6 +289,9 @@ img, video, canvas, svg {
   /* Admin Sidebar on Tablet/Mobile */
   .admin-layout {
     display: block;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
   }
 
   .admin-sidebar {
@@ -289,11 +299,19 @@ img, video, canvas, svg {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 280px;
+    width: 260px;
+    max-width: 80vw;
     height: 100vh;
-    z-index: 150;
+    height: 100dvh;
+    background-color: #0F172A;
+    color: #F8FAFC;
+    z-index: 1000; /* Strictly above overlay (990) */
     transform: translateX(-100%);
-    transition: transform var(--transition-normal);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-sidebar.mobile-open {
@@ -304,11 +322,15 @@ img, video, canvas, svg {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: inherit;
+    cursor: pointer;
   }
 
   .admin-main {
     width: 100%;
     margin-left: 0;
+    min-width: 0;
+    overflow-x: hidden;
   }
 
   .metrics-grid {

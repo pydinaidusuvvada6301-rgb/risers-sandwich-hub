@@ -125,7 +125,7 @@ function setupCheckoutForm() {
       return;
     }
 
-    const phoneValidation = validateIndianMobile(phoneInput?.value);
+    const phoneValidation = validateIndianMobile(phoneInput?.value, false);
     if (!phoneValidation.valid) {
       showToast(phoneValidation.message, 'error');
       phoneInput?.focus();
@@ -148,7 +148,7 @@ function setupCheckoutForm() {
 
     const orderPayload = {
       customer_name: nameValidation.cleanName,
-      customer_phone: phoneValidation.cleanPhone,
+      customer_phone: phoneValidation.cleanPhone || '',
       payment_method: paymentMethod,
       notes: sanitizeInput(notesInput?.value || ''),
       items: items.map(i => ({ product_id: i.product_id, quantity: i.quantity })),

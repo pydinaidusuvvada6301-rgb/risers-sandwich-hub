@@ -75,7 +75,7 @@ function applyFilters() {
       String(o.token_number).includes(search) ||
       o.order_number.toLowerCase().includes(search) ||
       o.customer_name.toLowerCase().includes(search) ||
-      o.customer_phone.includes(search);
+      (o.customer_phone ? o.customer_phone.includes(search) : false);
 
     const matchStatus = status === 'all' || o.order_status === status;
     const matchPay = payStatus === 'all' || o.payment_status === payStatus;
@@ -120,7 +120,7 @@ function renderOrdersTable(orders) {
         </td>
         <td>
           <div><strong>${escapeHtml(o.customer_name)}</strong></div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(o.customer_phone)}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(o.customer_phone || 'Not provided')}</div>
         </td>
         <td style="font-weight: 700;">${formatCurrency(o.total_amount)}</td>
         <td>${payBadge}</td>
@@ -156,7 +156,7 @@ function openOrderModal(orderId) {
   // Populate modal fields
   document.getElementById('modal-token-num').textContent = `#${order.token_number}`;
   document.getElementById('modal-order-num').textContent = order.order_number;
-  document.getElementById('modal-customer-info').textContent = `${order.customer_name} (${order.customer_phone})`;
+  document.getElementById('modal-customer-info').textContent = `${order.customer_name}${order.customer_phone ? ` (${order.customer_phone})` : ' (Not provided)'}`;
   document.getElementById('modal-order-time').textContent = formatDateTime(order.created_at);
   document.getElementById('modal-order-notes').textContent = order.notes || 'None';
   document.getElementById('modal-order-total').textContent = formatCurrency(order.total_amount);

@@ -77,7 +77,7 @@ function renderPendingTable(orders) {
       </td>
       <td>
         <div><strong>${escapeHtml(o.customer_name)}</strong></div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(o.customer_phone)}</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(o.customer_phone || 'Not provided')}</div>
       </td>
       <td style="font-weight: 800; font-size: 1.1rem;">${formatCurrency(o.total_amount)}</td>
       <td>
@@ -112,7 +112,7 @@ function openVerifyModal(orderId) {
 
   document.getElementById('pay-modal-token').textContent = `#${order.token_number}`;
   document.getElementById('pay-modal-order-num').textContent = order.order_number;
-  document.getElementById('pay-modal-customer').textContent = `${order.customer_name} (${order.customer_phone})`;
+  document.getElementById('pay-modal-customer').textContent = `${order.customer_name}${order.customer_phone ? ` (${order.customer_phone})` : ' (Not provided)'}`;
   document.getElementById('pay-modal-amount').textContent = formatCurrency(order.total_amount);
 
   const methodSelect = document.getElementById('pay-modal-method');

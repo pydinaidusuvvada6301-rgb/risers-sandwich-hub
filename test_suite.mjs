@@ -32,7 +32,12 @@ function assert(condition, testName) {
 // --------------------------------------------------------------
 console.log('--- Test Suite 1: Validation & Formatting ---');
 
-// Indian Mobile Validation (10 digits starting with 6, 7, 8, or 9)
+// Indian Mobile Validation (Optional by default, 10 digits starting with 6, 7, 8, or 9 when provided)
+assert(validateIndianMobile('').valid === true && validateIndianMobile('').cleanPhone === '', 'Allows empty string as optional mobile');
+assert(validateIndianMobile(null).valid === true && validateIndianMobile(null).cleanPhone === '', 'Allows null as optional mobile');
+assert(validateIndianMobile(undefined).valid === true && validateIndianMobile(undefined).cleanPhone === '', 'Allows undefined as optional mobile');
+assert(validateIndianMobile('   ').valid === true && validateIndianMobile('   ').cleanPhone === '', 'Allows whitespace-only as optional mobile');
+assert(validateIndianMobile('', true).valid === false, 'Rejects empty mobile when isRequired is true');
 assert(validateIndianMobile('9876543210').valid === true, 'Valid 10-digit mobile starting with 9');
 assert(validateIndianMobile('8123456789').valid === true, 'Valid 10-digit mobile starting with 8');
 assert(validateIndianMobile('7012345678').valid === true, 'Valid 10-digit mobile starting with 7');

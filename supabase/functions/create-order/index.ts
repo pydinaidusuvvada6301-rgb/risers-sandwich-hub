@@ -35,7 +35,7 @@ serve(async (req) => {
     }
 
     const cleanPhone = (customer_phone || "").replace(/\D/g, "");
-    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+    if (cleanPhone && !/^[6-9]\d{9}$/.test(cleanPhone)) {
       return new Response(JSON.stringify({ error: "Please enter a valid 10-digit Indian mobile number" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -131,12 +131,16 @@ serve(async (req) => {
     crypto.getRandomValues(randomBytes);
     const trackingHash = Array.from(randomBytes).map((b) => b.toString(16).padStart(2, "0")).join("");
 
-    // Upsert customer
-    const { data: custData } = await supabase
-      .from("customers")
-      .upsert({ phone: cleanPhone, name: customer_name.trim() }, { onConflict: "phone" })
-      .select("id")
-      .single();
+    // Upsert customer only if mobile number is provided
+    let customerId: string | null = null;
+    if (cleanPhone) {
+      const { data: custData } = await supabase
+        .from("customers")
+        .upsert({ phone: cleanPhone, name: customer_name.trim() }, { onConflict: "phone" })
+        .select("id")
+        .single();
+      customerId = custData?.id || null;
+    }
 
     // 5. Insert Order
     const { data: order, error: orderErr } = await supabase
@@ -144,9 +148,9 @@ serve(async (req) => {
       .insert({
         order_number: orderNumber,
         token_number: tokenNum,
-        customer_id: custData?.id,
+        customer_id: customerId,
         customer_name: customer_name.trim(),
-        customer_phone: cleanPhone,
+        customer_phone: cleanPhone || '',
         order_status: "received",
         payment_status: "pending",
         payment_method: payment_method,

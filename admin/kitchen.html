@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="/css/admin.css" />
   <link rel="stylesheet" href="/css/responsive.css" />
 </head>
+
 <body style="background-color: #1F2937;">
   <div class="admin-layout">
 
@@ -43,7 +45,8 @@
             <div class="admin-role">KITCHEN</div>
           </div>
         </div>
-        <button class="logout-btn btn btn-outline btn-sm" title="Log Out" style="color: #EF4444; border-color: #7F1D1D; padding: 0.35rem 0.6rem;">
+        <button class="logout-btn btn btn-outline btn-sm" title="Log Out"
+          style="color: #EF4444; border-color: #7F1D1D; padding: 0.35rem 0.6rem;">
           🚪
         </button>
       </div>
@@ -53,12 +56,14 @@
     <div class="admin-main" style="background-color: #111827;">
       <header class="admin-topbar" style="background-color: #1F2937; border-color: #374151; color: #FFFFFF;">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <button id="admin-sidebar-toggle" class="admin-sidebar-toggle" aria-label="Toggle Navigation" style="color: #FFFFFF;">☰</button>
+          <button id="admin-sidebar-toggle" class="admin-sidebar-toggle" aria-label="Toggle Navigation"
+            style="color: #FFFFFF;">☰</button>
           <h2 style="font-size: 1.25rem; color: #FFFFFF;">🔥 Active Kitchen Grills (KDS)</h2>
           <span class="badge badge-preparing" id="kitchen-queue-count">Loading...</span>
         </div>
         <div class="topbar-actions">
-          <button id="test-chime-btn" class="btn btn-secondary btn-sm" style="background-color: #374151; color: #FFFFFF; border: none;">
+          <button id="test-chime-btn" class="btn btn-secondary btn-sm"
+            style="background-color: #374151; color: #FFFFFF; border: none;">
             🔔 Test Chime
           </button>
           <button onclick="window.location.reload()" class="btn btn-primary btn-sm">↻ Refresh KDS</button>
@@ -75,4 +80,5 @@
 
   <script type="module" src="/js/admin/kitchen.js"></script>
 </body>
+
 </html>
